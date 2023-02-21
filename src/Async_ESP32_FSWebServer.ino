@@ -956,7 +956,18 @@ void setup()
   {
     request->send(200, "text/plain", String(ESP.getFreeHeap()));
   });
-
+  pinMode(32,OUTPUT);
+  server.on("/control", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+  if(request->hasParam("state")) {
+    if(request->getParam("state")->value() == "on") {
+      digitalWrite(32,HIGH);
+    } else if (request->getParam("state")->value() == "off") {
+      digitalWrite(32,LOW);
+    }
+  }
+  request->send(200);
+  });
   server.addHandler(new SPIFFSEditor(FileFS, http_username, http_password));
   server.serveStatic("/", FileFS, "/").setDefaultFile("index.htm");
 
