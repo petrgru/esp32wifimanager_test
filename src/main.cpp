@@ -458,6 +458,15 @@ WiFiClient *client                    = NULL;
 
 Adafruit_MQTT_Client    *mqtt         = NULL;
 Adafruit_MQTT_Publish   *Temperature  = NULL;
+String host = "async-esp32fs";
+
+AsyncWebServer server(HTTP_PORT);
+AsyncEventSource events("/events");
+
+String http_username = "admin";
+String http_password = "admin";
+
+String separatorLine = "===============================================================";
 
 // Forward Declaration
 
@@ -487,15 +496,6 @@ Adafruit_MQTT_Publish   *Temperature  = NULL;
 
 WiFi_AP_IPConfig  WM_AP_IPconfig;
 WiFi_STA_IPConfig WM_STA_IPconfig;
-String host = "async-esp32fs";
-
-AsyncWebServer server(HTTP_PORT);
-AsyncEventSource events("/events");
-
-String http_username = "admin";
-String http_password = "admin";
-
-String separatorLine = "===============================================================";
 
 void initAPIPConfigStruct(WiFi_AP_IPConfig &in_WM_AP_IPconfig)
 {
@@ -1484,7 +1484,7 @@ if ( !MDNS.begin(host.c_str()) )
   {
     Serial.println(F("Error starting MDNS responder!"));
   }
-
+  }
   // Add service to MDNS-SD
   MDNS.addService("http", "tcp", HTTP_PORT);
 
@@ -1501,7 +1501,6 @@ if ( !MDNS.begin(host.c_str()) )
   {
     request->send(200, "text/plain", String(ESP.getFreeHeap()));
   });
-
   server.addHandler(new SPIFFSEditor(FileFS, http_username, http_password));
   server.serveStatic("/", FileFS, "/").setDefaultFile("index.htm");
 
@@ -1602,7 +1601,7 @@ if ( !MDNS.begin(host.c_str()) )
   Serial.println(WiFi.localIP());
   
   digitalWrite(LED_BUILTIN, LED_OFF); // Turn led off as we are not in configuration mode.}
-  }
+  
 }
 // Loop function
 void loop(){
