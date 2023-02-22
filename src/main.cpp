@@ -487,6 +487,15 @@ Adafruit_MQTT_Publish   *Temperature  = NULL;
 
 WiFi_AP_IPConfig  WM_AP_IPconfig;
 WiFi_STA_IPConfig WM_STA_IPconfig;
+String host = "async-esp32fs";
+
+AsyncWebServer server(HTTP_PORT);
+AsyncEventSource events("/events");
+
+String http_username = "admin";
+String http_password = "admin";
+
+String separatorLine = "===============================================================";
 
 void initAPIPConfigStruct(WiFi_AP_IPConfig &in_WM_AP_IPconfig)
 {
@@ -1470,15 +1479,6 @@ void setup()
 
       connectMultiWiFi();
     }
-String host = "async-esp32fs";
-
-AsyncWebServer server(HTTP_PORT);
-AsyncEventSource events("/events");
-
-String http_username = "admin";
-String http_password = "admin";
-
-String separatorLine = "===============================================================";
 
 if ( !MDNS.begin(host.c_str()) )
   {
